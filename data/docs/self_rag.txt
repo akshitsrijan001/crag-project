@@ -1,0 +1,9 @@
+Self-RAG: Learning to Retrieve, Generate, and Critique
+
+Self-RAG, introduced by Asai et al. in 2023, is an advanced framework that trains a language model to adaptively retrieve information and self-reflect on its own generation using special reflection tokens. Unlike standard RAG, which always retrieves documents regardless of whether retrieval is necessary, Self-RAG learns when retrieval is helpful and when the model can rely on its own parametric knowledge.
+
+The Self-RAG framework introduces several types of reflection tokens. The "Retrieve" token determines whether retrieval is needed for a given input. The "ISREL" (Is Relevant) token assesses whether a retrieved passage is relevant to the input. The "ISSUP" (Is Supported) token evaluates whether the generated output is supported by the retrieved passage. The "ISUSE" (Is Useful) token judges the overall utility of the generated response.
+
+During training, Self-RAG uses a critic model to generate these reflection tokens, which are then used to train the main language model end-to-end. At inference time, the model generates these tokens as part of its output, allowing it to self-regulate its retrieval and generation behavior without external classifiers or evaluators.
+
+Self-RAG differs from CRAG in several important ways. While CRAG uses an external evaluator to assess retrieval quality and applies corrective actions through a predefined pipeline, Self-RAG integrates the evaluation capability directly into the language model through special tokens learned during training. CRAG is more modular and can be applied on top of any existing RAG system, while Self-RAG requires specialized training of the language model itself.

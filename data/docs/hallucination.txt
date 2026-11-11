@@ -1,0 +1,9 @@
+Hallucination in Large Language Models
+
+Hallucination refers to the phenomenon where large language models (LLMs) generate text that is fluent and confident-sounding but factually incorrect, fabricated, or not supported by the provided context. This is one of the most significant challenges facing the deployment of LLMs in real-world applications, particularly in domains requiring high accuracy such as healthcare, legal, and financial services.
+
+There are two main types of hallucination. Intrinsic hallucination occurs when the generated output contradicts the source material or provided context. Extrinsic hallucination occurs when the model generates information that cannot be verified from the source material — it may or may not be factually correct, but it is not grounded in the given evidence.
+
+Several factors contribute to hallucination. Training data quality and biases play a role, as models may learn and reproduce inaccuracies present in their training corpus. The autoregressive nature of text generation means that once a model starts generating incorrect information, subsequent tokens may compound the error. Additionally, the model's tendency to produce fluent, coherent text can override factual accuracy.
+
+Retrieval-Augmented Generation is one of the primary strategies for mitigating hallucination. By grounding generation in retrieved documents, RAG provides the model with factual context that reduces reliance on potentially unreliable parametric knowledge. However, standard RAG is not a complete solution — if the retrieved documents are irrelevant or the model ignores them, hallucination can still occur. This is precisely why approaches like CRAG, which verify retrieval quality before generation, are valuable additions to the RAG paradigm.

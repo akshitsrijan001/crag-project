@@ -1,0 +1,11 @@
+Vector Embeddings and Similarity Search
+
+Vector embeddings are numerical representations of text (or other data) in a high-dimensional space, where semantically similar items are mapped to nearby points. In the context of information retrieval and RAG systems, embeddings play a crucial role in finding relevant documents for a given query.
+
+Modern embedding models like Sentence-BERT (SBERT) and its variants (such as all-MiniLM-L6-v2) are trained using contrastive learning objectives. They process text through a transformer architecture and produce fixed-size dense vectors, typically of 384 or 768 dimensions. These models are trained so that semantically similar sentences produce vectors with high cosine similarity, while dissimilar sentences produce vectors with low cosine similarity.
+
+Cosine similarity is the most commonly used metric for comparing embeddings. It measures the cosine of the angle between two vectors, producing a value between -1 and 1, where 1 indicates identical direction (maximum similarity), 0 indicates orthogonality (no similarity), and -1 indicates opposite directions. The formula is: cosine_similarity(A, B) = (A dot B) / (|A| * |B|).
+
+In a simple vector store implementation, all document chunks are embedded and stored as a matrix of vectors. When a query arrives, it is embedded using the same model, and cosine similarity is computed between the query vector and all document vectors. The top-k most similar documents are then returned as the retrieval results. While production systems use approximate nearest neighbor libraries like FAISS or Annoy for efficiency, a straightforward numpy implementation works well for small to medium collections.
+
+The quality of embeddings directly impacts retrieval accuracy. Choosing the right embedding model for your domain, properly chunking documents, and tuning the number of retrieved results (k) are all important considerations for building effective RAG systems.

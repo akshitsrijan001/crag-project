@@ -1,0 +1,9 @@
+Prompt Engineering Basics
+
+Prompt engineering is the practice of designing and optimizing input prompts to effectively guide large language models toward producing desired outputs. It has emerged as a critical skill in working with modern AI systems, as the quality and structure of prompts significantly impact the quality of generated responses.
+
+Several key techniques have been developed in the field of prompt engineering. Zero-shot prompting involves giving the model a task description without any examples, relying on the model's pre-trained knowledge to understand and execute the task. Few-shot prompting provides a small number of input-output examples before the actual query, helping the model understand the expected format and reasoning pattern. Chain-of-thought (CoT) prompting encourages the model to show its reasoning step by step, which has been shown to improve performance on complex reasoning tasks.
+
+In the context of RAG systems, prompt engineering plays a vital role in both the retrieval evaluation and generation stages. For retrieval evaluation, prompts must be carefully designed to instruct the model to assess document relevance objectively and return structured outputs (such as JSON scores). For generation, the prompt must clearly instruct the model to base its answer solely on the provided context and to acknowledge when the context is insufficient rather than fabricating information.
+
+Other important prompting strategies include role prompting (assigning a specific persona to the model), output format specification (requesting JSON, markdown, or specific structures), and constraint setting (imposing length limits, tone requirements, or factual grounding rules). The effectiveness of these techniques varies across models and tasks, making iterative testing and refinement an essential part of the prompt engineering process.

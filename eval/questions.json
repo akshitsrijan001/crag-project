@@ -1,0 +1,62 @@
+[
+  {
+    "question": "What is Retrieval-Augmented Generation and who introduced it?",
+    "expected_branch": "CORRECT",
+    "reference_answer": "RAG was introduced by Lewis et al. in 2020. It combines pre-trained language models with external knowledge retrieval to generate answers grounded in retrieved documents."
+  },
+  {
+    "question": "How does CRAG evaluate retrieved documents before generation?",
+    "expected_branch": "CORRECT",
+    "reference_answer": "CRAG uses a retrieval evaluator that scores documents for relevance. Based on thresholds, it classifies retrieval as CORRECT, AMBIGUOUS, or INCORRECT and routes to different corrective actions."
+  },
+  {
+    "question": "What is cosine similarity and how is it used in vector search?",
+    "expected_branch": "CORRECT",
+    "reference_answer": "Cosine similarity measures the cosine of the angle between two vectors, producing values between -1 and 1. It is used to compare query embeddings with document embeddings to find the most relevant passages."
+  },
+  {
+    "question": "What are the two types of hallucination in large language models?",
+    "expected_branch": "CORRECT",
+    "reference_answer": "Intrinsic hallucination contradicts the source material, while extrinsic hallucination generates information that cannot be verified from the source but may or may not be factually correct."
+  },
+  {
+    "question": "How does Self-RAG differ from CRAG in handling retrieval evaluation?",
+    "expected_branch": "AMBIGUOUS",
+    "reference_answer": "Self-RAG integrates evaluation into the model using special reflection tokens learned during training, while CRAG uses an external evaluator module. Self-RAG requires specialized model training whereas CRAG is modular and can be added to any RAG system."
+  },
+  {
+    "question": "What are some advanced prompt engineering techniques for improving RAG systems?",
+    "expected_branch": "AMBIGUOUS",
+    "reference_answer": "Advanced techniques include chain-of-thought prompting, few-shot examples for evaluation prompts, structured output formatting (JSON), role prompting, and iterative prompt refinement."
+  },
+  {
+    "question": "What are the main differences between RAG-Sequence and RAG-Token approaches?",
+    "expected_branch": "AMBIGUOUS",
+    "reference_answer": "RAG-Sequence uses the same retrieved document for the full output sequence, while RAG-Token can use different documents for each output token. Both were introduced in the original RAG paper by Lewis et al."
+  },
+  {
+    "question": "How does dense passage retrieval work in modern RAG systems?",
+    "expected_branch": "AMBIGUOUS",
+    "reference_answer": "Dense passage retrieval encodes queries and documents into dense vectors using trained encoders, then finds the most similar documents using vector similarity search like cosine similarity."
+  },
+  {
+    "question": "Who won the most recent FIFA World Cup?",
+    "expected_branch": "INCORRECT",
+    "reference_answer": "This question is about sports and is not covered in the knowledge base about AI and RAG systems."
+  },
+  {
+    "question": "What is the current price of Bitcoin?",
+    "expected_branch": "INCORRECT",
+    "reference_answer": "This question is about cryptocurrency prices and is not covered in the knowledge base about AI and RAG systems."
+  },
+  {
+    "question": "How do you make traditional Italian carbonara pasta?",
+    "expected_branch": "INCORRECT",
+    "reference_answer": "This question is about cooking and is not covered in the knowledge base about AI and RAG systems."
+  },
+  {
+    "question": "What were the results of the latest Mars rover mission?",
+    "expected_branch": "INCORRECT",
+    "reference_answer": "This question is about space exploration and is not covered in the knowledge base about AI and RAG systems."
+  }
+]

@@ -1,0 +1,23 @@
+# Environment & Secrets
+.env
+*.env
+!.env.example
+
+# Python
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# HuggingFace & Torch cache
+.cache/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# OS
+.DS_Store
+Thumbs.db

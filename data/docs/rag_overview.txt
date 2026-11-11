@@ -1,0 +1,9 @@
+Retrieval-Augmented Generation: An Overview
+
+Retrieval-Augmented Generation (RAG) is a technique introduced by Lewis et al. in their landmark 2020 paper "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks." The core idea is to combine the strengths of pre-trained language models with an external knowledge retrieval mechanism. Instead of relying solely on the parametric knowledge stored in a language model's weights, RAG retrieves relevant documents from an external corpus and conditions the generation on both the input query and the retrieved documents.
+
+The architecture consists of two main components: a retriever and a generator. The retriever, typically based on dense passage retrieval (DPR), encodes both queries and documents into dense vector representations and finds the most relevant documents using similarity search. The generator, usually a sequence-to-sequence model like BART or T5, then takes both the original query and the retrieved documents as input to produce the final answer.
+
+RAG addresses a fundamental limitation of large language models: their knowledge is frozen at training time. By augmenting generation with real-time retrieval, RAG systems can access up-to-date information, provide source attribution for their answers, and reduce the tendency to generate factually incorrect statements. This makes RAG particularly valuable for knowledge-intensive tasks such as open-domain question answering, fact verification, and information synthesis.
+
+The original RAG paper demonstrated two variants: RAG-Sequence, which uses the same retrieved document to generate the complete output sequence, and RAG-Token, which can use different documents for each output token. Both variants showed significant improvements over purely parametric models on benchmarks like Natural Questions, TriviaQA, and WebQuestions.

@@ -1,0 +1,92 @@
+[
+  {
+    "text": "Corrective Retrieval-Augmented Generation (CRAG) Corrective Retrieval-Augmented Generation (CRAG) was introduced by Yan et al. in 2024 as an enhancement to standard RAG systems. The key insight behind CRAG is that standard RAG pipelines blindly trust the retrieved documents, even when those documents may be irrelevant, partially relevant, or even misleading. CRAG addresses this by introducing a lightweight retrieval evaluator that assesses the quality of retrieved documents before they are passed to the generator. The CRAG framework operates through three main actions based on the evaluator's assessment. When the retrieved documents are deemed CORRECT (highly relevant to the query), CRAG applies a knowledge refinement step that extracts only the most pertinent information, filtering out noise and irrelevant details. When the evaluation result is AMBIGUOUS (partially relevant), CRAG combines the refined local",
+    "source": "crag_paper.txt",
+    "start_word": 0
+  },
+  {
+    "text": "information, filtering out noise and irrelevant details. When the evaluation result is AMBIGUOUS (partially relevant), CRAG combines the refined local knowledge with results from external web searches to supplement the available context. When the retrieval is judged INCORRECT (irrelevant to the query), CRAG discards the local documents entirely and instead rewrites the query into a more effective web search query, relying solely on web search results for generation. The retrieval evaluator in CRAG is a critical component. It can be implemented using a fine-tuned classifier or, more practically, using a language model prompted to assess the relevance of each retrieved document to the query on a numerical scale. The evaluator scores are then compared against configurable thresholds to determine the routing decision. CRAG represents an important step toward more robust",
+    "source": "crag_paper.txt",
+    "start_word": 110
+  },
+  {
+    "text": "scores are then compared against configurable thresholds to determine the routing decision. CRAG represents an important step toward more robust and self-correcting RAG systems. By adding this evaluation and correction layer, CRAG significantly reduces the impact of retrieval failures on the final generated output, leading to more accurate and reliable answers.",
+    "source": "crag_paper.txt",
+    "start_word": 220
+  },
+  {
+    "text": "Hallucination in Large Language Models Hallucination refers to the phenomenon where large language models (LLMs) generate text that is fluent and confident-sounding but factually incorrect, fabricated, or not supported by the provided context. This is one of the most significant challenges facing the deployment of LLMs in real-world applications, particularly in domains requiring high accuracy such as healthcare, legal, and financial services. There are two main types of hallucination. Intrinsic hallucination occurs when the generated output contradicts the source material or provided context. Extrinsic hallucination occurs when the model generates information that cannot be verified from the source material — it may or may not be factually correct, but it is not grounded in the given evidence. Several factors contribute to hallucination. Training data quality and biases play a role,",
+    "source": "hallucination.txt",
+    "start_word": 0
+  },
+  {
+    "text": "is not grounded in the given evidence. Several factors contribute to hallucination. Training data quality and biases play a role, as models may learn and reproduce inaccuracies present in their training corpus. The autoregressive nature of text generation means that once a model starts generating incorrect information, subsequent tokens may compound the error. Additionally, the model's tendency to produce fluent, coherent text can override factual accuracy. Retrieval-Augmented Generation is one of the primary strategies for mitigating hallucination. By grounding generation in retrieved documents, RAG provides the model with factual context that reduces reliance on potentially unreliable parametric knowledge. However, standard RAG is not a complete solution — if the retrieved documents are irrelevant or the model ignores them, hallucination can still occur. This is precisely why approaches like CRAG, which",
+    "source": "hallucination.txt",
+    "start_word": 110
+  },
+  {
+    "text": "documents are irrelevant or the model ignores them, hallucination can still occur. This is precisely why approaches like CRAG, which verify retrieval quality before generation, are valuable additions to the RAG paradigm.",
+    "source": "hallucination.txt",
+    "start_word": 220
+  },
+  {
+    "text": "Prompt Engineering Basics Prompt engineering is the practice of designing and optimizing input prompts to effectively guide large language models toward producing desired outputs. It has emerged as a critical skill in working with modern AI systems, as the quality and structure of prompts significantly impact the quality of generated responses. Several key techniques have been developed in the field of prompt engineering. Zero-shot prompting involves giving the model a task description without any examples, relying on the model's pre-trained knowledge to understand and execute the task. Few-shot prompting provides a small number of input-output examples before the actual query, helping the model understand the expected format and reasoning pattern. Chain-of-thought (CoT) prompting encourages the model to show its reasoning step by step, which has been shown to improve performance",
+    "source": "prompt_engineering.txt",
+    "start_word": 0
+  },
+  {
+    "text": "Chain-of-thought (CoT) prompting encourages the model to show its reasoning step by step, which has been shown to improve performance on complex reasoning tasks. In the context of RAG systems, prompt engineering plays a vital role in both the retrieval evaluation and generation stages. For retrieval evaluation, prompts must be carefully designed to instruct the model to assess document relevance objectively and return structured outputs (such as JSON scores). For generation, the prompt must clearly instruct the model to base its answer solely on the provided context and to acknowledge when the context is insufficient rather than fabricating information. Other important prompting strategies include role prompting (assigning a specific persona to the model), output format specification (requesting JSON, markdown, or specific structures), and constraint setting (imposing length limits, tone requirements,",
+    "source": "prompt_engineering.txt",
+    "start_word": 110
+  },
+  {
+    "text": "to the model), output format specification (requesting JSON, markdown, or specific structures), and constraint setting (imposing length limits, tone requirements, or factual grounding rules). The effectiveness of these techniques varies across models and tasks, making iterative testing and refinement an essential part of the prompt engineering process.",
+    "source": "prompt_engineering.txt",
+    "start_word": 220
+  },
+  {
+    "text": "Retrieval-Augmented Generation: An Overview Retrieval-Augmented Generation (RAG) is a technique introduced by Lewis et al. in their landmark 2020 paper \"Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks.\" The core idea is to combine the strengths of pre-trained language models with an external knowledge retrieval mechanism. Instead of relying solely on the parametric knowledge stored in a language model's weights, RAG retrieves relevant documents from an external corpus and conditions the generation on both the input query and the retrieved documents. The architecture consists of two main components: a retriever and a generator. The retriever, typically based on dense passage retrieval (DPR), encodes both queries and documents into dense vector representations and finds the most relevant documents using similarity search. The generator, usually a sequence-to-sequence model like BART or T5, then takes",
+    "source": "rag_overview.txt",
+    "start_word": 0
+  },
+  {
+    "text": "finds the most relevant documents using similarity search. The generator, usually a sequence-to-sequence model like BART or T5, then takes both the original query and the retrieved documents as input to produce the final answer. RAG addresses a fundamental limitation of large language models: their knowledge is frozen at training time. By augmenting generation with real-time retrieval, RAG systems can access up-to-date information, provide source attribution for their answers, and reduce the tendency to generate factually incorrect statements. This makes RAG particularly valuable for knowledge-intensive tasks such as open-domain question answering, fact verification, and information synthesis. The original RAG paper demonstrated two variants: RAG-Sequence, which uses the same retrieved document to generate the complete output sequence, and RAG-Token, which can use different documents for each output token. Both variants showed",
+    "source": "rag_overview.txt",
+    "start_word": 110
+  },
+  {
+    "text": "to generate the complete output sequence, and RAG-Token, which can use different documents for each output token. Both variants showed significant improvements over purely parametric models on benchmarks like Natural Questions, TriviaQA, and WebQuestions.",
+    "source": "rag_overview.txt",
+    "start_word": 220
+  },
+  {
+    "text": "Self-RAG: Learning to Retrieve, Generate, and Critique Self-RAG, introduced by Asai et al. in 2023, is an advanced framework that trains a language model to adaptively retrieve information and self-reflect on its own generation using special reflection tokens. Unlike standard RAG, which always retrieves documents regardless of whether retrieval is necessary, Self-RAG learns when retrieval is helpful and when the model can rely on its own parametric knowledge. The Self-RAG framework introduces several types of reflection tokens. The \"Retrieve\" token determines whether retrieval is needed for a given input. The \"ISREL\" (Is Relevant) token assesses whether a retrieved passage is relevant to the input. The \"ISSUP\" (Is Supported) token evaluates whether the generated output is supported by the retrieved passage. The \"ISUSE\" (Is Useful) token judges the overall utility of",
+    "source": "self_rag.txt",
+    "start_word": 0
+  },
+  {
+    "text": "whether the generated output is supported by the retrieved passage. The \"ISUSE\" (Is Useful) token judges the overall utility of the generated response. During training, Self-RAG uses a critic model to generate these reflection tokens, which are then used to train the main language model end-to-end. At inference time, the model generates these tokens as part of its output, allowing it to self-regulate its retrieval and generation behavior without external classifiers or evaluators. Self-RAG differs from CRAG in several important ways. While CRAG uses an external evaluator to assess retrieval quality and applies corrective actions through a predefined pipeline, Self-RAG integrates the evaluation capability directly into the language model through special tokens learned during training. CRAG is more modular and can be applied on top of any existing RAG system,",
+    "source": "self_rag.txt",
+    "start_word": 110
+  },
+  {
+    "text": "special tokens learned during training. CRAG is more modular and can be applied on top of any existing RAG system, while Self-RAG requires specialized training of the language model itself.",
+    "source": "self_rag.txt",
+    "start_word": 220
+  },
+  {
+    "text": "Vector Embeddings and Similarity Search Vector embeddings are numerical representations of text (or other data) in a high-dimensional space, where semantically similar items are mapped to nearby points. In the context of information retrieval and RAG systems, embeddings play a crucial role in finding relevant documents for a given query. Modern embedding models like Sentence-BERT (SBERT) and its variants (such as all-MiniLM-L6-v2) are trained using contrastive learning objectives. They process text through a transformer architecture and produce fixed-size dense vectors, typically of 384 or 768 dimensions. These models are trained so that semantically similar sentences produce vectors with high cosine similarity, while dissimilar sentences produce vectors with low cosine similarity. Cosine similarity is the most commonly used metric for comparing embeddings. It measures the cosine of the angle between two",
+    "source": "vector_embeddings.txt",
+    "start_word": 0
+  },
+  {
+    "text": "Cosine similarity is the most commonly used metric for comparing embeddings. It measures the cosine of the angle between two vectors, producing a value between -1 and 1, where 1 indicates identical direction (maximum similarity), 0 indicates orthogonality (no similarity), and -1 indicates opposite directions. The formula is: cosine_similarity(A, B) = (A dot B) / (|A| * |B|). In a simple vector store implementation, all document chunks are embedded and stored as a matrix of vectors. When a query arrives, it is embedded using the same model, and cosine similarity is computed between the query vector and all document vectors. The top-k most similar documents are then returned as the retrieval results. While production systems use approximate nearest neighbor libraries like FAISS or Annoy for efficiency, a straightforward numpy implementation",
+    "source": "vector_embeddings.txt",
+    "start_word": 110
+  },
+  {
+    "text": "retrieval results. While production systems use approximate nearest neighbor libraries like FAISS or Annoy for efficiency, a straightforward numpy implementation works well for small to medium collections. The quality of embeddings directly impacts retrieval accuracy. Choosing the right embedding model for your domain, properly chunking documents, and tuning the number of retrieved results (k) are all important considerations for building effective RAG systems.",
+    "source": "vector_embeddings.txt",
+    "start_word": 220
+  }
+]

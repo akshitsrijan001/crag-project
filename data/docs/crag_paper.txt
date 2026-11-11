@@ -1,0 +1,9 @@
+Corrective Retrieval-Augmented Generation (CRAG)
+
+Corrective Retrieval-Augmented Generation (CRAG) was introduced by Yan et al. in 2024 as an enhancement to standard RAG systems. The key insight behind CRAG is that standard RAG pipelines blindly trust the retrieved documents, even when those documents may be irrelevant, partially relevant, or even misleading. CRAG addresses this by introducing a lightweight retrieval evaluator that assesses the quality of retrieved documents before they are passed to the generator.
+
+The CRAG framework operates through three main actions based on the evaluator's assessment. When the retrieved documents are deemed CORRECT (highly relevant to the query), CRAG applies a knowledge refinement step that extracts only the most pertinent information, filtering out noise and irrelevant details. When the evaluation result is AMBIGUOUS (partially relevant), CRAG combines the refined local knowledge with results from external web searches to supplement the available context. When the retrieval is judged INCORRECT (irrelevant to the query), CRAG discards the local documents entirely and instead rewrites the query into a more effective web search query, relying solely on web search results for generation.
+
+The retrieval evaluator in CRAG is a critical component. It can be implemented using a fine-tuned classifier or, more practically, using a language model prompted to assess the relevance of each retrieved document to the query on a numerical scale. The evaluator scores are then compared against configurable thresholds to determine the routing decision.
+
+CRAG represents an important step toward more robust and self-correcting RAG systems. By adding this evaluation and correction layer, CRAG significantly reduces the impact of retrieval failures on the final generated output, leading to more accurate and reliable answers.

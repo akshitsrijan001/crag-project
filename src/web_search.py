@@ -6,7 +6,11 @@ def search(query: str, n: int = 4) -> list[dict]:
     Returns list of {title, snippet, url}. Fails gracefully.
     """
     try:
-        from duckduckgo_search import DDGS
+        try:
+            from ddgs import DDGS
+        except ImportError:
+            from duckduckgo_search import DDGS
+
         with DDGS() as ddgs:
             raw_results = list(ddgs.text(query, max_results=n))
         results = []

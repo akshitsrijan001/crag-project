@@ -30,6 +30,31 @@
     "start_word": 220
   },
   {
+    "text": "UE24CS352A: Machine Learning Dr. Shylaja S S Professor Department of Computer Science & Engineering Acknowledgement : Dr. Rajanikanth K (Academic Advisor, PESU) Teaching Assistant (Arya Rajiv Chaloli) MACHINE LEARNING Introduction to Markov Models Dr. Shylaja S S Department of Computer Science and Engineering MACHINE LEARNING The IID Assumption • Independent: • Identically Distributed: drawing from the same prob. distribution • This assumption does not hold for many real-life scenarios: • Any time series data (e.g.: audio/video signal) • Probability of words occurring in a sentence • Base-pairs in a DNA strand MACHINE LEARNING Stochastic Process • A collection of random variables indexed by an index set (i.e., time), where all the random variables draw values from a common state space • Simplest example: • Toss a coin N times, to",
+    "source": "ml_u3j.pdf",
+    "start_word": 0
+  },
+  {
+    "text": "the random variables draw values from a common state space • Simplest example: • Toss a coin N times, to get a vector of length N containing H or T • The process is stochastic, where each random variable draws from the state space of H, T • A Markov process is a specific kind of stochastic process that follows the Markov property: • A stochastic process {Xt}\\{X_t\\}{Xt} is said to have the Markov property if the future state depends only on the present state, and not on the past states. MACHINE LEARNING The Markov Assumption MACHINE LEARNING Markov Chain • A Markov chain is a discrete-time stochastic process that satisfies the Markov property • A Markov Chain has the following components: • A set of states Q • An",
+    "source": "ml_u3j.pdf",
+    "start_word": 110
+  },
+  {
+    "text": "satisfies the Markov property • A Markov Chain has the following components: • A set of states Q • An initial distribution π • A transition matrix A(N x N) MACHINE LEARNING Markov Chain: What do the parameters mean? Examples of next state prediction given past states We study stochastic processes because real-world systems evolve over time under uncertainty — weather, stock prices, patient health, machine reliability, etc. So, we naturally want to predict or understand the future behavior of such systems. • In finance, predicting the next market state helps decide whether to buy or sell. • A self-driving car predicts the next position of nearby vehicles. • 70% chance of rain tomorrow” tells us about weather persistence. • In manufacturing, predicting when a machine will fail helps schedule",
+    "source": "ml_u3j.pdf",
+    "start_word": 220
+  },
+  {
+    "text": "chance of rain tomorrow” tells us about weather persistence. • In manufacturing, predicting when a machine will fail helps schedule maintenance. • P(Rain on Wed∣Sunny on Tue) helps in forecasting, resource planning, and risk management. • “What is the probability the patient will be in a particular health state tomorrow, given their current and previous states?” Example of Likelihood Observation sequence = daily patient symptom severity: O=[Healthy, Mild, Mild, Severe, Hospitalized] HMM trained on historical patients’ progression Compute likelihood P(O/HMM) Interpretation: ● High likelihood → this progression is typical ● Low likelihood → this progression is unusual, may need attention MACHINE LEARNING Markov Chain: State Sequence Likelihood MACHINE LEARNING Markov Chain: Finding Parameters MACHINE LEARNING Markov Chain: Example States: Sunny (S), Cloudy (C), Windy (W) MACHINE LEARNING Markov Chain: Example",
+    "source": "ml_u3j.pdf",
+    "start_word": 330
+  },
+  {
+    "text": "Chain: Finding Parameters MACHINE LEARNING Markov Chain: Example States: Sunny (S), Cloudy (C), Windy (W) MACHINE LEARNING Markov Chain: Example Answer Sunny Cloudy Windy Sunny 2/15 4/15 9/15 Cloudy 9/19 4/19 6/19 Windy 9/22 12/22 1/22 UE24CS352A: Machine Learning Dr. Shylaja S S Department of Computer Science & Engineering shylaja.sharath@pes.edu",
+    "source": "ml_u3j.pdf",
+    "start_word": 440
+  },
+  {
     "text": "Prompt Engineering Basics Prompt engineering is the practice of designing and optimizing input prompts to effectively guide large language models toward producing desired outputs. It has emerged as a critical skill in working with modern AI systems, as the quality and structure of prompts significantly impact the quality of generated responses. Several key techniques have been developed in the field of prompt engineering. Zero-shot prompting involves giving the model a task description without any examples, relying on the model's pre-trained knowledge to understand and execute the task. Few-shot prompting provides a small number of input-output examples before the actual query, helping the model understand the expected format and reasoning pattern. Chain-of-thought (CoT) prompting encourages the model to show its reasoning step by step, which has been shown to improve performance",
     "source": "prompt_engineering.txt",
     "start_word": 0

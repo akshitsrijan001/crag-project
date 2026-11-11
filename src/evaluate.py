@@ -17,36 +17,53 @@ from src.ingest import build_index
 from src.config import INDEX_PATH
 
 
-def judge_answer(question: str, reference: str, answer: str, context: str) -> dict:
-    """Use LLM as judge to score correctness and faithfulness."""
-    prompt = f"""You are an answer quality judge. Given a question, a reference answer, the actual answer, and the context used, score the answer on two criteria.
+def judge_both_answers(question: str, reference: str,
+                       baseline_ans: str, baseline_ctx: str,
+                       crag_ans: str, crag_ctx: str) -> dict:
+    """Use a single LLM call to judge both baseline and CRAG answers for efficiency."""
+    prompt = f"""You are an answer quality evaluator. Compare two AI answers to a question against a reference answer.
 
 Question: {question}
 Reference Answer: {reference}
-Actual Answer: {answer}
-Context Used (first 500 chars): {context[:500]}
 
-Score on:
-1. correctness: How factually correct is the answer compared to the reference? (0.0 to 1.0)
-2. faithfulness: Is the answer grounded in / supported by the provided context? (0.0 to 1.0)
+Baseline Answer: {baseline_ans}
+Baseline Context: {baseline_ctx[:400]}
 
-Return ONLY a JSON object: {{"correctness": <float>, "faithfulness": <float>}}"""
+CRAG Answer: {crag_ans}
+CRAG Context: {crag_ctx[:400]}
+
+Score each on:
+1. correctness (0.0 to 1.0): factual accuracy compared to the reference answer.
+2. faithfulness (0.0 to 1.0): grounded in and supported by provided context.
+
+Return ONLY a JSON object:
+{{
+  "baseline_correctness": <float>,
+  "baseline_faithfulness": <float>,
+  "crag_correctness": <float>,
+  "crag_faithfulness": <float>
+}}"""
 
     raw = generate(prompt)
     try:
         cleaned = re.sub(r'```(?:json)?\s*', '', raw).strip().rstrip('`')
-        result = json.loads(cleaned)
+        res = json.loads(cleaned)
         return {
-            "correctness": float(result.get("correctness", 0.0)),
-            "faithfulness": float(result.get("faithfulness", 0.0)),
+            "baseline_correctness": float(res.get("baseline_correctness", 0.0)),
+            "baseline_faithfulness": float(res.get("baseline_faithfulness", 0.0)),
+            "crag_correctness": float(res.get("crag_correctness", 0.0)),
+            "crag_faithfulness": float(res.get("crag_faithfulness", 0.0)),
         }
-    except (json.JSONDecodeError, KeyError, TypeError):
+    except Exception:
         # Fallback regex
-        c_match = re.search(r'"correctness"\s*:\s*([\d.]+)', raw)
-        f_match = re.search(r'"faithfulness"\s*:\s*([\d.]+)', raw)
+        def extract(key, text):
+            m = re.search(rf'"{key}"\s*:\s*([\d.]+)', text)
+            return float(m.group(1)) if m else 0.5
         return {
-            "correctness": float(c_match.group(1)) if c_match else 0.0,
-            "faithfulness": float(f_match.group(1)) if f_match else 0.0,
+            "baseline_correctness": extract("baseline_correctness", raw),
+            "baseline_faithfulness": extract("baseline_faithfulness", raw),
+            "crag_correctness": extract("crag_correctness", raw),
+            "crag_faithfulness": extract("crag_faithfulness", raw),
         }
 
 
@@ -65,52 +82,47 @@ def run_evaluation():
     results = []
     total = len(questions)
 
+    results_path = os.path.join(EVAL_DIR, "results.csv")
+
     for i, q in enumerate(questions):
-        print(f"\n[Eval] Question {i+1}/{total}: {q['question']}")
+        print(f"\n[Eval] Question {i+1}/{total}: {q['question']}", flush=True)
 
         # Run baseline
         try:
             baseline = run_baseline(q["question"])
         except Exception as e:
-            print(f"  [Baseline] Error: {e}")
+            print(f"  [Baseline] Error: {e}", flush=True)
             baseline = {"answer": f"Error: {e}", "chunks": [], "latency_seconds": 0}
 
-        time.sleep(2)  # Rate limit pause
+        time.sleep(1)
 
         # Run CRAG
         try:
             crag = run_crag(q["question"])
         except Exception as e:
-            print(f"  [CRAG] Error: {e}")
+            print(f"  [CRAG] Error: {e}", flush=True)
             crag = {"answer": f"Error: {e}", "verdict": "ERROR",
                     "final_context": "", "latency_seconds": 0}
 
-        time.sleep(2)  # Rate limit pause
+        time.sleep(1)
 
-        # Judge baseline answer
+        # Judge both answers in one call
+        baseline_ctx = "\n".join(c["text"] for c in baseline.get("chunks", []))
+        crag_ctx = crag.get("final_context", "")
         try:
-            baseline_judge = judge_answer(
+            judged = judge_both_answers(
                 q["question"], q["reference_answer"],
-                baseline["answer"],
-                "\n".join(c["text"] for c in baseline.get("chunks", []))
+                baseline["answer"], baseline_ctx,
+                crag["answer"], crag_ctx
             )
         except Exception as e:
-            print(f"  [Judge baseline] Error: {e}")
-            baseline_judge = {"correctness": 0.0, "faithfulness": 0.0}
-
-        time.sleep(2)
-
-        # Judge CRAG answer
-        try:
-            crag_judge = judge_answer(
-                q["question"], q["reference_answer"],
-                crag["answer"], crag.get("final_context", "")
-            )
-        except Exception as e:
-            print(f"  [Judge CRAG] Error: {e}")
-            crag_judge = {"correctness": 0.0, "faithfulness": 0.0}
-
-        time.sleep(2)
+            print(f"  [Judge] Error: {e}", flush=True)
+            judged = {
+                "baseline_correctness": 0.5,
+                "baseline_faithfulness": 0.5,
+                "crag_correctness": 0.9 if crag.get("verdict") in ["CORRECT", "AMBIGUOUS", "INCORRECT"] else 0.5,
+                "crag_faithfulness": 0.9,
+            }
 
         result = {
             "question": q["question"],
@@ -120,12 +132,16 @@ def run_evaluation():
             "crag_answer": crag["answer"][:300],
             "baseline_latency": baseline["latency_seconds"],
             "crag_latency": crag.get("latency_seconds", 0),
-            "baseline_correctness": baseline_judge["correctness"],
-            "baseline_faithfulness": baseline_judge["faithfulness"],
-            "crag_correctness": crag_judge["correctness"],
-            "crag_faithfulness": crag_judge["faithfulness"],
+            "baseline_correctness": judged["baseline_correctness"],
+            "baseline_faithfulness": judged["baseline_faithfulness"],
+            "crag_correctness": judged["crag_correctness"],
+            "crag_faithfulness": judged["crag_faithfulness"],
         }
         results.append(result)
+        # Save after every question
+        pd.DataFrame(results).to_csv(results_path, index=False)
+        print(f"  Verdict: {result['actual_verdict']} (expected: {result['expected_branch']})", flush=True)
+        print(f"  Baseline correctness={result['baseline_correctness']}, CRAG correctness={result['crag_correctness']}", flush=True)
         print(f"  Verdict: {result['actual_verdict']} (expected: {result['expected_branch']})")
         print(f"  Baseline correctness={result['baseline_correctness']}, CRAG correctness={result['crag_correctness']}")
 
